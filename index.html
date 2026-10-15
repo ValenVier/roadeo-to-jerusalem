@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Road(eo) to Jerusalem: a racing game of biblical proportions</title>
+  <meta name="description" content="Road(eo) to Jerusalem is a mobile donkey racing game in development. Tilt to steer, shake to tackle, and steal Jesus from the donkey in front of you.">
+  <meta name="theme-color" content="#1c345f">
+  <meta property="og:title" content="Road(eo) to Jerusalem">
+  <meta property="og:description" content="A mobile donkey racing game of biblical proportions. Tilt to steer, shake to tackle, steal Jesus.">
+  <meta property="og:image" content="assets/hero.jpg">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/lobster-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+
+<!-- Shared drawings, used with <use> below -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="donkey" viewBox="0 0 48 48">
+      <path d="M15 24 C8 16 9 4 15 3 C20 3 21 12 21 21 Z" fill="var(--fur, #8a5a44)" stroke="#2a1a10" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M33 24 C40 16 39 4 33 3 C28 3 27 12 27 21 Z" fill="var(--fur, #8a5a44)" stroke="#2a1a10" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M13 25 C13 18 35 18 35 25 L37 35 C37 42 31 46 24 46 C17 46 11 42 11 35 Z" fill="var(--fur, #8a5a44)" stroke="#2a1a10" stroke-width="1.5" stroke-linejoin="round"/>
+      <ellipse cx="24" cy="39" rx="9" ry="6.2" fill="#f2e4c4"/>
+      <circle cx="21" cy="39.5" r="1.1" fill="#2a1a10"/>
+      <circle cx="27" cy="39.5" r="1.1" fill="#2a1a10"/>
+      <circle cx="17.5" cy="29" r="2" fill="#2a1a10"/>
+      <circle cx="30.5" cy="29" r="2" fill="#2a1a10"/>
+      <path d="M19 20 C21 14 27 14 29 20 C26 18 22 18 19 20 Z" fill="#2a1a10"/>
+    </symbol>
+
+    <symbol id="phone" viewBox="0 0 120 160">
+      <rect x="4" y="4" width="112" height="152" rx="14" fill="#1d1a1a" stroke="#0e0c0c" stroke-width="2"/>
+      <rect x="11" y="16" width="98" height="128" rx="6" fill="#1c345f"/>
+      <rect x="48" y="8" width="24" height="3.5" rx="1.75" fill="#3a3535"/>
+      <path d="M11 112 L109 112 L109 138 Q109 144 103 144 L17 144 Q11 144 11 138 Z" fill="#c9992f" opacity="0.85"/>
+      <svg x="40" y="62" width="40" height="40" viewBox="0 0 48 48"><use href="#donkey"/></svg>
+    </symbol>
+
+    <symbol id="carrot" viewBox="0 0 52 52">
+      <path d="M17 23 C24 16 36 18 40 25 L9 46 Z" fill="#d9731f" stroke="#2a1a10" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M22 28 L28 24 M17 35 L23 31" stroke="#8f4510" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+      <path d="M36 20 C36 12 41 8 46 6 C46 12 44 18 40 24 Z" fill="#4f7a2d" stroke="#2a1a10" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M30 18 C28 11 31 7 35 4 C37 9 36 14 34 20 Z" fill="#6a9a3a" stroke="#2a1a10" stroke-width="1.4" stroke-linejoin="round"/>
+    </symbol>
+
+    <symbol id="palm" viewBox="0 0 52 52">
+      <path d="M8 46 C18 36 30 22 44 8" stroke="#6b4a22" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <g stroke="#4f7a2d" stroke-width="4" stroke-linecap="round" fill="none">
+        <path d="M17 38 L9 30"/>
+        <path d="M17 38 L22 46"/>
+        <path d="M24 31 L16 22"/>
+        <path d="M24 31 L31 39"/>
+        <path d="M31 24 L24 14"/>
+        <path d="M31 24 L40 30"/>
+        <path d="M38 16 L32 8"/>
+        <path d="M38 16 L47 20"/>
+      </g>
+    </symbol>
+
+    <symbol id="hay" viewBox="0 0 52 52">
+      <rect x="5" y="14" width="42" height="26" rx="4" fill="#d6a93c" stroke="#2a1a10" stroke-width="1.6"/>
+      <path d="M18 14 V40 M34 14 V40" stroke="#8a6a1e" stroke-width="2.2"/>
+      <path d="M9 21 L14 19 M9 29 L15 27 M22 22 L29 20 M22 31 L30 29 M38 22 L43 20 M38 32 L43 30" stroke="#a8801f" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M10 14 L8 9 M25 14 L26 8 M41 14 L44 9" stroke="#d6a93c" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+
+    <symbol id="crate" viewBox="0 0 52 52">
+      <rect x="7" y="9" width="38" height="34" rx="2" fill="#a8744a" stroke="#2a1a10" stroke-width="1.6"/>
+      <path d="M7 20.5 H45 M7 31.5 H45" stroke="#6a4528" stroke-width="1.8"/>
+      <path d="M9 11 L43 41 M43 11 L9 41" stroke="#6a4528" stroke-width="2.2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="./">Road(eo) to Jerusalem</a>
+    <nav aria-label="Main">
+      <ul class="nav">
+        <li><a href="#how">How to play</a></li>
+        <li><a href="#jesus">Steal Jesus</a></li>
+        <li><a href="#items">Items</a></li>
+        <li><a href="#progress">Progress</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="privacy-policy/">Privacy policy</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" aria-labelledby="title">
+    <div class="wrap hero__grid">
+      <div class="hero__text">
+        <h1 class="hero__title" id="title">Road(eo) to Jerusalem</h1>
+        <blockquote class="verse">
+          <p>So the last shall be first, and the first last.</p>
+          <cite>Matthew 20:16</cite>
+        </blockquote>
+        <p class="hero__lede">Race your donkey through the streets of Jerusalem. Tackle your rivals, steal Jesus from the donkey in front of you and carry him over the finish line.</p>
+        <p class="hero__status">In development for Android.</p>
+        <a class="button" href="#how">See how it plays</a>
+      </div>
+      <figure class="plate">
+        <img src="assets/hero.jpg" width="1070" height="597" alt="Concept painting: Jesus riding a donkey at full gallop, with rival donkeys close behind.">
+        <figcaption>Concept art</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <h2 class="section__title" id="how-title">Your phone is the steering wheel</h2>
+      <p class="section__intro">No buttons to find. You race by moving the phone. Hover over a phone, or tap it, to see the move.</p>
+
+      <ul class="gestures">
+        <li class="gestures__item">
+          <button class="demo demo--steer" type="button" aria-label="Play the steering demo">
+            <span class="demo__stage">
+              <svg class="demo__phone" viewBox="0 0 120 160" aria-hidden="true"><use href="#phone"/></svg>
+              <svg class="demo__cue" viewBox="0 0 160 180" aria-hidden="true">
+                <path d="M30 30 C14 46 14 70 22 86"/><path class="head" d="M14 84 L24 90 L26 78 Z"/>
+                <path d="M130 30 C146 46 146 70 138 86"/><path class="head" d="M146 84 L136 90 L134 78 Z"/>
+              </svg>
+            </span>
+            <span class="demo__hint">Hover or tap</span>
+          </button>
+          <h3 class="gestures__name">Tilt left and right</h3>
+          <p class="gestures__text">Steer your donkey around corners and away from obstacles.</p>
+        </li>
+
+        <li class="gestures__item">
+          <button class="demo demo--speed" type="button" aria-label="Play the speed demo">
+            <span class="demo__stage">
+              <svg class="demo__phone" viewBox="0 0 120 160" aria-hidden="true"><use href="#phone"/></svg>
+              <svg class="demo__cue" viewBox="0 0 160 180" aria-hidden="true">
+                <path d="M80 8 V32"/><path class="head" d="M70 14 L80 2 L90 14 Z"/>
+                <path d="M80 148 V172"/><path class="head" d="M70 166 L80 178 L90 166 Z"/>
+              </svg>
+            </span>
+            <span class="demo__hint">Hover or tap</span>
+          </button>
+          <h3 class="gestures__name">Tilt forward and back</h3>
+          <p class="gestures__text">Lean forward to gallop faster. Lean back to slow down.</p>
+        </li>
+
+        <li class="gestures__item">
+          <button class="demo demo--tackle" type="button" aria-label="Play the tackle demo">
+            <span class="demo__stage">
+              <svg class="demo__phone" viewBox="0 0 120 160" aria-hidden="true"><use href="#phone"/></svg>
+              <svg class="demo__cue" viewBox="0 0 160 180" aria-hidden="true">
+                <path d="M8 62 L16 70 L8 78 L16 86 L8 94"/>
+                <path d="M152 62 L144 70 L152 78 L144 86 L152 94"/>
+              </svg>
+            </span>
+            <span class="demo__hint">Hover or tap</span>
+          </button>
+          <h3 class="gestures__name">Shake to tackle</h3>
+          <p class="gestures__text">Catch a rival at close range, shake the phone and knock them off balance.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--lapis" id="jesus" aria-labelledby="jesus-title">
+    <div class="wrap jesus__grid">
+      <div class="jesus__text">
+        <h2 class="section__title" id="jesus-title">The last shall be first</h2>
+        <p>Every race has one prize that matters more than your speed: Jesus. One donkey carries him at a time, and any rival close enough can tackle you and take him.</p>
+        <p>When the race ends, the donkey that carries Jesus climbs up to four places in the final ranking. A donkey in last place can still win, if it holds on to him at the right moment.</p>
+        <p class="jesus__quote">Think Mario Kart, with capture the flag. The flag is Jesus.</p>
+      </div>
+
+      <div class="rank" data-rank>
+        <div class="rank__board">
+          <ol class="rank__places" aria-hidden="true">
+            <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+          </ol>
+          <ol class="rank__list" aria-label="Final ranking">
+            <li class="rank__row" data-id="grey" style="--pos:0">
+              <svg class="rank__avatar" viewBox="0 0 48 48" style="--fur:#8c8f96" aria-hidden="true"><use href="#donkey"/></svg>
+              <span class="rank__name">Greyfuriel</span>
+              <span class="rank__chip">Carries Jesus</span>
+            </li>
+            <li class="rank__row" data-id="sure" style="--pos:1">
+              <svg class="rank__avatar" viewBox="0 0 48 48" style="--fur:#8a5a44" aria-hidden="true"><use href="#donkey"/></svg>
+              <span class="rank__name">Surefootiel</span>
+              <span class="rank__chip">Carries Jesus</span>
+            </li>
+            <li class="rank__row" data-id="long" style="--pos:2">
+              <svg class="rank__avatar" viewBox="0 0 48 48" style="--fur:#efe6d2" aria-hidden="true"><use href="#donkey"/></svg>
+              <span class="rank__name">Longeariel</span>
+              <span class="rank__chip">Carries Jesus</span>
+            </li>
+            <li class="rank__row" data-id="play" style="--pos:3">
+              <svg class="rank__avatar" viewBox="0 0 48 48" style="--fur:#b07a52" aria-hidden="true"><use href="#donkey"/></svg>
+              <span class="rank__name">Playriel</span>
+              <span class="rank__chip">Carries Jesus</span>
+            </li>
+            <li class="rank__row has-jesus" data-id="hard" style="--pos:4">
+              <svg class="rank__avatar" viewBox="0 0 48 48" style="--fur:#3d2b22" aria-hidden="true"><use href="#donkey"/></svg>
+              <span class="rank__name">Hardhooviel</span>
+              <span class="rank__chip">Carries Jesus</span>
+            </li>
+          </ol>
+        </div>
+        <div class="rank__controls">
+          <button class="button button--gold rank__button" type="button" data-rank-button>Give the bonus</button>
+          <p class="rank__status" data-rank-status aria-live="polite">The race is over. Hardhooviel carries Jesus, but only in 5th place.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="items" aria-labelledby="items-title">
+    <div class="wrap">
+      <h2 class="section__title" id="items-title">Grab it, dodge it</h2>
+      <p class="section__intro">The track is full of things that help you and things that get in your way. This list will grow as the game does.</p>
+
+      <div class="loot">
+        <div>
+          <h3 class="loot__heading">Items</h3>
+          <ul class="loot__list">
+            <li class="loot__item">
+              <svg class="loot__icon" viewBox="0 0 52 52" aria-hidden="true"><use href="#carrot"/></svg>
+              <div><span class="loot__name">Carrot</span><span class="loot__text">A tasty burst of speed.</span></div>
+            </li>
+            <li class="loot__item">
+              <svg class="loot__icon" viewBox="0 0 52 52" aria-hidden="true"><use href="#palm"/></svg>
+              <div><span class="loot__name">Palm leaf</span><span class="loot__text">Drop it behind you and trip up whoever follows.</span></div>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="loot__heading">Obstacles</h3>
+          <ul class="loot__list">
+            <li class="loot__item">
+              <svg class="loot__icon" viewBox="0 0 52 52" aria-hidden="true"><use href="#hay"/></svg>
+              <div><span class="loot__name">Hay bale</span><span class="loot__text">Steer around it, or lose speed.</span></div>
+            </li>
+            <li class="loot__item">
+              <svg class="loot__icon" viewBox="0 0 52 52" aria-hidden="true"><use href="#crate"/></svg>
+              <div><span class="loot__name">Market crate</span><span class="loot__text">The streets of Jerusalem are busy. Watch the corners.</span></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--lapis" id="progress" aria-labelledby="progress-title">
+    <div class="wrap">
+      <h2 class="section__title" id="progress-title">Where we are</h2>
+      <p class="section__intro" style="color: inherit; opacity: .85">Road(eo) to Jerusalem is a student project and still early. Here is what is done, what we are building now and what comes next.</p>
+
+      <div class="progress">
+        <div class="progress__col progress__col--done">
+          <h3 class="progress__heading">Done</h3>
+          <ul class="progress__list">
+            <li>Game idea and pitch</li>
+            <li>First Android build in Google Play testing</li>
+            <li>Store page and privacy policy</li>
+          </ul>
+        </div>
+        <div class="progress__col">
+          <h3 class="progress__heading">Building now</h3>
+          <ul class="progress__list">
+            <li>Real-time multiplayer</li>
+            <li>Donkey animation</li>
+            <li>Tilt and shake controls</li>
+          </ul>
+        </div>
+        <div class="progress__col progress__col--next">
+          <h3 class="progress__heading">Up next</h3>
+          <ul class="progress__list">
+            <li>AI donkeys</li>
+            <li>Items and obstacles</li>
+            <li>Donkey customization</li>
+          </ul>
+        </div>
+      </div>
+      <p class="progress__date">Last updated October 2026.</p>
+    </div>
+  </section>
+
+  <section class="section" id="team" aria-labelledby="team-title">
+    <div class="wrap">
+      <h2 class="section__title" id="team-title">Disciples</h2>
+      <p class="section__intro">A student game development team from Stockholm, building Road(eo) to Jerusalem together.</p>
+
+      <ul class="team__list">
+        <li>
+          <svg class="team__avatar" viewBox="0 0 48 48" style="--fur:#8a5a44" aria-hidden="true"><use href="#donkey"/></svg>
+          <span class="team__name">Javier</span>
+          <span class="team__role">Game developer</span>
+        </li>
+        <li>
+          <svg class="team__avatar" viewBox="0 0 48 48" style="--fur:#8c8f96" aria-hidden="true"><use href="#donkey"/></svg>
+          <span class="team__name">Doro</span>
+          <span class="team__role">Game developer</span>
+        </li>
+        <li>
+          <svg class="team__avatar" viewBox="0 0 48 48" style="--fur:#b07a52" aria-hidden="true"><use href="#donkey"/></svg>
+          <span class="team__name">Ashi</span>
+          <span class="team__role">Game developer</span>
+        </li>
+        <li>
+          <svg class="team__avatar" viewBox="0 0 48 48" style="--fur:#3d2b22" aria-hidden="true"><use href="#donkey"/></svg>
+          <span class="team__name">Kamil</span>
+          <span class="team__role">Game developer</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <div>
+      <p class="site-footer__brand">Road(eo) to Jerusalem</p>
+      <p class="site-footer__note">Made by Disciples, a student game development team in Stockholm, Sweden. The game is in development.</p>
+    </div>
+    <ul class="site-footer__links">
+      <li><a href="privacy-policy/">Privacy policy</a></li>
+      <li><a href="mailto:YOUR_CONTACT_EMAIL">YOUR_CONTACT_EMAIL</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>
